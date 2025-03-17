@@ -1,0 +1,150 @@
+{
+    "address": "88QHaEWCaccAzrgzsDESBCAYEuyC4hKeUJRKbTi3fQHx",
+    "metadata": {
+        "name": "sonic_svm_zkbridge",
+        "version": "0.1.0",
+        "spec": "0.1.0",
+        "description": "Created with Anchor"
+    },
+    "instructions": [
+        {
+            "name": "create_mint",
+            "discriminator": [
+                69,
+                44,
+                215,
+                132,
+                253,
+                214,
+                41,
+                45
+            ],
+            "accounts": [
+                {
+                    "name": "admin",
+                    "writable": true,
+                    "signer": true,
+                    "address": "4yLVEowhDEy4Xrs9Quaqka5Yq96iZSnmPDfENJrpFz3j"
+                },
+                {
+                    "name": "token_mint",
+                    "writable": true,
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const",
+                                "value": [
+                                    122,
+                                    107,
+                                    98,
+                                    114,
+                                    105,
+                                    100,
+                                    103,
+                                    101
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "metadata_account",
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                },
+                {
+                    "name": "token_metadata_program",
+                    "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+                },
+                {
+                    "name": "system_program",
+                    "address": "11111111111111111111111111111111"
+                },
+                {
+                    "name": "rent",
+                    "address": "SysvarRent111111111111111111111111111111111"
+                }
+            ],
+            "args": [
+                {
+                    "name": "uri",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "name": "symbol",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "mint_on_bridge",
+            "discriminator": [
+                23,
+                251,
+                73,
+                115,
+                110,
+                0,
+                166,
+                231
+            ],
+            "accounts": [
+                {
+                    "name": "admin",
+                    "writable": true,
+                    "signer": true,
+                    "address": "4yLVEowhDEy4Xrs9Quaqka5Yq96iZSnmPDfENJrpFz3j"
+                },
+                {
+                    "name": "user_token_account"
+                },
+                {
+                    "name": "token_mint",
+                    "writable": true,
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const",
+                                "value": [
+                                    122,
+                                    107,
+                                    98,
+                                    114,
+                                    105,
+                                    100,
+                                    103,
+                                    101
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "token_program",
+                    "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                },
+                {
+                    "name": "associated_token_program",
+                    "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+                },
+                {
+                    "name": "system_program",
+                    "address": "11111111111111111111111111111111"
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        }
+    ]
+}
