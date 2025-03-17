@@ -1,5 +1,4 @@
 import { STAKE_POOL_MINT } from "@/lib/constants";
-import { toDecimals } from "@/lib/number";
 import {
   depositSol,
   getStakePoolAccount,
@@ -20,7 +19,6 @@ export function useStake() {
   return useMutation({
     mutationFn: async (amount: string) => {
       if (!publicKey || !signTransaction) return;
-
       const stakePoolAccount = await getStakePoolAccount(
         connection,
         STAKE_POOL_MINT
@@ -32,7 +30,7 @@ export function useStake() {
         connection,
         STAKE_POOL_MINT,
         publicKey,
-        Number(toDecimals(amount))
+        Number(amount)
       );
 
       const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({

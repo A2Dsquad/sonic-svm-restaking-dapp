@@ -1,4 +1,5 @@
 import { CircleX } from "lucide-react";
+import type { ReactNode } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,7 @@ import {
 interface TxFailedDialogProps {
   open: boolean;
   error?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   onOpenChange: () => void;
 }
 
@@ -33,7 +34,9 @@ export function TxFailedDialog({
         <DialogDescription className="mt-5 w-full">
           <span>Error message:</span>
           <span className="text-destructive ml-2">
-            {error?.length && error.length > 250 ? error.slice(0, 250) + '...' : error}
+            {error?.length && error.length > 250
+              ? `${error.slice(0, 250).toString()}...`
+              : `${error}`}
           </span>
         </DialogDescription>
       </DialogContent>

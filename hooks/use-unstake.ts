@@ -1,5 +1,4 @@
 import { STAKE_POOL_MINT } from "@/lib/constants";
-import { toDecimals } from "@/lib/number";
 import {
   getStakePoolAccount,
   updateStakePool,
@@ -33,7 +32,7 @@ export function useUnstake() {
         STAKE_POOL_MINT,
         publicKey,
         publicKey,
-        Number(toDecimals(amount))
+        Number(amount)
       );
 
       const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
