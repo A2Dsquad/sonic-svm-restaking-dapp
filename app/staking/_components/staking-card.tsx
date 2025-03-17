@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -23,22 +24,19 @@ import {
 import { TxFailedDialog } from "@/components/ui/tx-failed-dialog";
 import { TxSuccessDialog } from "@/components/ui/tx-success-dialog";
 import { useBalance } from "@/hooks/use-balance";
-import { usePoolShares } from "@/hooks/use-pool-shares";
-import { usePoolStakedAmount } from "@/hooks/use-pool-staked-amount";
+import { useSolBalance } from "@/hooks/use-sol-balance";
 import { useStake } from "@/hooks/use-stake";
 import { useUnstake } from "@/hooks/use-unstake";
 import { fromDecimals, toCurrency, toDecimals } from "@/lib/number";
-import { ZKBRIDE_MINT } from "@sdk/zkbridge/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ZKBRIDE_MINT } from "@sdk/zkbridge/constants";
 import { useWallet } from "@solana/wallet-adapter-react";
 import BigNumber from "bignumber.js";
-import { ArrowLeft, Terminal } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Terminal } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { Badge } from "@/components/ui/badge";
 
 const formSchema = z.object({
   amount: z.string().refine(
@@ -54,7 +52,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const assetName = "senSol";
+const assetName = "senSOL";
 const assetIcon = "/assets/logo.png";
 const tokenAddress = ZKBRIDE_MINT;
 
@@ -63,10 +61,8 @@ export function StakingCard() {
 
   const [mode, setMode] = useState<"deposit" | "withdraw">("deposit");
   const [error, setError] = useState<Error | undefined>();
-  const router = useRouter();
   const { data: balance = "0" } = useBalance(tokenAddress);
-  const { data: stakedAmount = 0 } = usePoolStakedAmount(tokenAddress);
-  const { data: poolShares = [] } = usePoolShares();
+  const { data: solBalance = "0" } = useSolBalance();
 
   const stakeMutation = useStake();
   const unstakeMutation = useUnstake();
@@ -85,7 +81,7 @@ export function StakingCard() {
     : null;
   const now = new Date().getTime();
 
-  const stakedAmountFormatted = fromDecimals(stakedAmount ?? 0);
+  const stakedAmountFormatted = fromDecimals(solBalance ?? 0);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -126,17 +122,13 @@ export function StakingCard() {
 
   const isDisabled =
     mode === "withdraw"
-      ? stakedAmount === 0 || !inputAmount
+      ? solBalance === "0" || !inputAmount
       : !balance || !inputAmount;
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-2">
         <div className="-ml-2 flex items-center gap-2">
-          <Button variant="ghost" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
           <div className="flex items-center space-x-2">
             <Avatar className="w-6 h-6">
               <img src={assetIcon} alt={assetName} />
@@ -173,21 +165,9 @@ export function StakingCard() {
               </p>
 
               <div className="flex flex-row w-full justify-between">
-                {/* <p className="text-sm font-light mb-3">
-                  TVL:{" "}
-                  <span className="font-semibold">
-                    {toCurrency(
-                      fromDecimals(poolShares?.at(0)?.totalShares ?? 0),
-                      {
-                        suffix: ` ${assetName}`,
-                        decimals: 2,
-                      }
-                    )}
-                  </span>
-                </p> */}
                 <div />
                 <p className="text-sm font-light mb-3">
-                  You restaked:{" "}
+                  {"You restaked "}
                   <span className="font-semibold">
                     {toCurrency(fromDecimals(balance), {
                       suffix: ` ${assetName}`,
@@ -214,8 +194,9 @@ export function StakingCard() {
                 />
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-sm text-muted-foreground">
-                    {mode === "deposit" ? balance : stakedAmountFormatted}{" "}
-                    {assetName}
+                    {mode === "deposit"
+                      ? `${stakedAmountFormatted} SOL`
+                      : `${balance} ${assetName}`}
                   </span>
                   <div className="flex space-x-2">
                     <Button
@@ -248,7 +229,7 @@ export function StakingCard() {
             </div>
             <div className="flex justify-between items-center">
               <p className="text-sm font-semibold mb-3">Exchange rate:</p>
-              <p className="text-sm mb-3">1 senSol = 1.000001 sol</p>
+              <p className="text-sm mb-3">1 senSOL = 1.000001 SOL</p>
             </div>
             <Button
               type="submit"

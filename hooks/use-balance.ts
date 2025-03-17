@@ -1,4 +1,3 @@
-import { fromDecimals } from "@/lib/number";
 import { getAccount, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { PublicKey } from "@solana/web3.js";
@@ -13,7 +12,7 @@ export function useBalance(tokenAddress: PublicKey) {
     queryFn: async () => {
       try {
         if (!publicKey) {
-          return fromDecimals("0");
+          return "0";
         }
 
         const tokenAccount = getAssociatedTokenAddressSync(
@@ -21,7 +20,7 @@ export function useBalance(tokenAddress: PublicKey) {
           publicKey
         );
         const accountInfo = await getAccount(connection, tokenAccount);
-        return fromDecimals(accountInfo.amount.toString());
+        return accountInfo.amount.toString();
       } catch (error) {
         console.error("Error fetching balance", error);
         return "0";

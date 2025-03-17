@@ -11,6 +11,7 @@ interface AVS {
   totalRestaked: string;
   numOperators: number;
   numStakers: number;
+  link: string;
 }
 
 const avsData: (AVS | null)[] = [
@@ -23,6 +24,7 @@ const avsData: (AVS | null)[] = [
     totalRestaked: "$1,200",
     numOperators: 5,
     numStakers: 12,
+    link: "https://sonic-svm-senbridge.netlify.app",
   },
   null,
   null,
@@ -44,45 +46,47 @@ function AVSCard({ avs }: { avs: AVS | null }) {
   }
 
   return (
-    <HoverBorderGradient
-      containerClassName="min-h-[250px] w-full h-full"
-      className="w-full h-full"
-    >
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center space-x-2">
-            <Avatar className="w-16 h-16">
-              <img src={avs.avatar} alt={avs.name} />
-            </Avatar>
-            <div>
-              <h2 className="text-2xl font-bold">{avs.name}</h2>
-              <div className="flex items-center text-muted-foreground">
-                <span>{shortenAddress(avs.address)}</span>
+    <a href={avs.link} target="_blank" rel="noopener noreferrer">
+      <HoverBorderGradient
+        containerClassName="min-h-[250px] w-full h-full"
+        className="w-full h-full"
+      >
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center space-x-2">
+              <Avatar className="w-16 h-16">
+                <img src={avs.avatar} alt={avs.name} />
+              </Avatar>
+              <div>
+                <h2 className="text-2xl font-bold">{avs.name}</h2>
+                <div className="flex items-center text-muted-foreground">
+                  <span>{shortenAddress(avs.address)}</span>
+                </div>
               </div>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-base text-left text-muted-foreground mb-4 line-clamp-3 pb-4">
-            {avs.description}
-          </p>
-          <div className="flex flex-col gap-2 text-base pt-2">
-            <div className="flex items-center justify-between w-full">
-              <p className="text-muted-foreground">Total Restaked</p>
-              <p className="font-semibold">{avs.totalRestaked}</p>
+          </CardHeader>
+          <CardContent>
+            <p className="text-base text-left text-muted-foreground mb-4 line-clamp-3 pb-4">
+              {avs.description}
+            </p>
+            <div className="flex flex-col gap-2 text-base pt-2">
+              <div className="flex items-center justify-between w-full">
+                <p className="text-muted-foreground">Total Restaked</p>
+                <p className="font-semibold">{avs.totalRestaked}</p>
+              </div>
+              <div className="flex items-center justify-between w-full">
+                <p className="text-muted-foreground">Num. Operators</p>
+                <p className="font-semibold">{avs.numOperators}</p>
+              </div>
+              <div className="flex items-center justify-between w-full">
+                <p className="text-muted-foreground">Num. Stakers</p>
+                <p className="font-semibold">{avs.numStakers}</p>
+              </div>
             </div>
-            <div className="flex items-center justify-between w-full">
-              <p className="text-muted-foreground">Num. Operators</p>
-              <p className="font-semibold">{avs.numOperators}</p>
-            </div>
-            <div className="flex items-center justify-between w-full">
-              <p className="text-muted-foreground">Num. Stakers</p>
-              <p className="font-semibold">{avs.numStakers}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </HoverBorderGradient>
+          </CardContent>
+        </Card>
+      </HoverBorderGradient>
+    </a>
   );
 }
 
