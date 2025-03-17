@@ -12,6 +12,7 @@
     "sync:sdk": "degit git@github.com:A2Dsquad/sonic-svm-restaking-sdk.git sonic-restaking-sdk --force"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.31.0",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-collapsible": "^1.1.0",

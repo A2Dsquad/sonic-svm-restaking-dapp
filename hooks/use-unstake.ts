@@ -11,14 +11,16 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import { useMutation } from "@tanstack/react-query";
+import { useAnchorProvider } from "./use-anchor-provider";
 
 export function useUnstake() {
-  const { publicKey, sendTransaction, signTransaction } = useWallet();
+  const { publicKey } = useWallet();
   const { connection } = useConnection();
+  const provider = useAnchorProvider();
 
   return useMutation({
     mutationFn: async (amount: string) => {
-      if (!publicKey || !signTransaction) return;
+      if (!publicKey) return;
 
       const stakePoolAccount = await getStakePoolAccount(
         connection,
@@ -56,12 +58,11 @@ export function useUnstake() {
         recentBlockhash: blockhash,
       }).compileToV0Message();
       const tx = new VersionedTransaction(msg);
+      const signature = await provider.sendAndConfirm(tx, signers, {
+        commitment: "confirmed",
+      });
 
-      const signedTx = await signTransaction(tx);
-
-      const txId = await sendTransaction(signedTx, connection);
-
-      return txId;
+      return signature;
     },
   });
 }

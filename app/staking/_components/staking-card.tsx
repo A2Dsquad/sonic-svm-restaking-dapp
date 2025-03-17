@@ -27,9 +27,9 @@ import { useBalance } from "@/hooks/use-balance";
 import { useSolBalance } from "@/hooks/use-sol-balance";
 import { useStake } from "@/hooks/use-stake";
 import { useUnstake } from "@/hooks/use-unstake";
+import { POOL_MINT } from "@/lib/constants";
 import { fromDecimals, toCurrency, toDecimals } from "@/lib/number";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ZKBRIDE_MINT } from "@sdk/zkbridge/constants";
 import { useWallet } from "@solana/wallet-adapter-react";
 import BigNumber from "bignumber.js";
 import { Terminal } from "lucide-react";
@@ -54,7 +54,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 const assetName = "senSOL";
 const assetIcon = "/assets/logo.png";
-const tokenAddress = ZKBRIDE_MINT;
+const tokenAddress = POOL_MINT;
 
 export function StakingCard() {
   const { publicKey } = useWallet();
@@ -81,7 +81,8 @@ export function StakingCard() {
     : null;
   const now = new Date().getTime();
 
-  const stakedAmountFormatted = fromDecimals(solBalance ?? 0);
+  const solBalanceFormatted = fromDecimals(solBalance ?? 0);
+  const balanceFormatted = fromDecimals(balance ?? 0);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -95,7 +96,7 @@ export function StakingCard() {
   const handlePercentageClick = (percentage: number) => {
     let maxAmount = 0;
     if (mode === "withdraw") {
-      maxAmount = Number.parseFloat(stakedAmountFormatted.replace(/,/g, ""));
+      maxAmount = Number.parseFloat(solBalanceFormatted.replace(/,/g, ""));
     } else {
       maxAmount = Number.parseFloat(balance.replace(/,/g, ""));
     }
@@ -113,7 +114,7 @@ export function StakingCard() {
       if (mode === "deposit") {
         await stakeMutation.mutateAsync(amountInDecimal);
       } else {
-        await unstakeMutation.mutateAsync(amountInDecimal);
+        await unstakeMutation.mutateAsync(data.amount);
       }
     } catch (err) {
       setError(err as Error);
@@ -169,7 +170,7 @@ export function StakingCard() {
                 <p className="text-sm font-light mb-3">
                   {"You restaked "}
                   <span className="font-semibold">
-                    {toCurrency(fromDecimals(balance), {
+                    {toCurrency(balanceFormatted, {
                       suffix: ` ${assetName}`,
                     })}{" "}
                   </span>
@@ -195,8 +196,8 @@ export function StakingCard() {
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-sm text-muted-foreground">
                     {mode === "deposit"
-                      ? `${stakedAmountFormatted} SOL`
-                      : `${balance} ${assetName}`}
+                      ? `${solBalanceFormatted} SOL`
+                      : `${balanceFormatted} ${assetName}`}
                   </span>
                   <div className="flex space-x-2">
                     <Button
@@ -296,7 +297,7 @@ export function StakingCard() {
           )}
         <TxSuccessDialog
           open={!!stakeMutation.data || !!unstakeMutation.data}
-          txLink={`https://explorer.sonic.game/address/${
+          txLink={`https://explorer.sonic.game/tx/${
             stakeMutation.data || unstakeMutation.data
           }/metadata?cluster=testnet.v1`}
           onOpenChange={() => {
