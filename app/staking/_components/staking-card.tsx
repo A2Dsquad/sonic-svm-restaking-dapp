@@ -299,7 +299,7 @@ export function StakingCard() {
           open={!!stakeMutation.data || !!unstakeMutation.data}
           txLink={`https://explorer.sonic.game/tx/${
             stakeMutation.data || unstakeMutation.data
-          }/metadata?cluster=testnet.v1`}
+          }?cluster=testnet.v1`}
           onOpenChange={() => {
             stakeMutation.reset();
             unstakeMutation.reset();
